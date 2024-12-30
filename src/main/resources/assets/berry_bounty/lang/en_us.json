@@ -4,6 +4,8 @@
   "item.berry_bounty.yellow_berry": "Yellow Berries",
 
   "item.berry_bounty.sinister_berry": "Sinister Berries",
-  "item.berry_bounty.spicy_berry": "Spicy Berries"
+  "item.berry_bounty.spicy_berry": "Spicy Berries",
+
+  "effect.berry_bounty.warmth": "Warmth"
 
 }
