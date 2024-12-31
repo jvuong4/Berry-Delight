@@ -37,6 +37,7 @@ public class AiryBerry extends Berry {
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 120, 3));
     }
 
+    @Override
     //what happens to all entities affected by the user eating this berry with convection
     public void weakEffect(LivingEntity target) {
         //get launched into the air!! yay :D

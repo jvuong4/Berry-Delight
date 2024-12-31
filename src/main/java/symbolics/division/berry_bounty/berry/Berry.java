@@ -40,8 +40,9 @@ abstract class Berry extends Item {
             }
         }
         //standard effect when the user doesn't have convection
-        else
+        else {
             strongEffect(user);
+        }
         return super.finishUsing(stack, world, user);
     }
 }

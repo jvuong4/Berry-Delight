@@ -38,6 +38,7 @@ public class SpicyBerry extends Berry {
         user.addStatusEffect(new StatusEffectInstance(BBEffects.WARMTH, 80, 1));
     }
 
+    @Override
     //what happens to all entities affected by the user eating this berry with convection
     public void weakEffect(LivingEntity entity) {
         //burn for 1 seconds, deals 1/2 heart of damage

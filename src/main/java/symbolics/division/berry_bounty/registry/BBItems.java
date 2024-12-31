@@ -13,6 +13,8 @@ import symbolics.division.berry_bounty.BerryBounty;
 import symbolics.division.berry_bounty.berry.SinisterBerry;
 import symbolics.division.berry_bounty.berry.SpicyBerry;
 import symbolics.division.berry_bounty.berry.AiryBerry;
+import symbolics.division.berry_bounty.berry.BeastBerry;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public final class BBItems {
     public static final Item SINISTER_BERRY = item("sinister_berry", new SinisterBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
     public static final Item SPICY_BERRY = item("spicy_berry", new SpicyBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
     public static final Item AIRY_BERRY = item("airy_berry", new AiryBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
+    public static final Item BEAST_BERRY = item("beast_berry", new BeastBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
 
     public static final RegistryKey<ItemGroup> ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), BerryBounty.id("item_group"));
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
