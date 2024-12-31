@@ -7,6 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import symbolics.division.berry_bounty.berry.Berry;
+
 import net.minecraft.entity.effect.StatusEffectInstance;
 import symbolics.division.berry_bounty.registry.BBEffects;
 
@@ -21,13 +23,14 @@ import net.minecraft.entity.passive.FoxEntity;
  *
  * This berry also negates freezing, which can be useful in powdered snow
  */
-public class SpicyBerry extends Item {
+public class SpicyBerry extends Berry {
     public SpicyBerry(Item.Settings settings) {
         super(settings);
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+    //the standard effect given to the user
+    public void strongEffect(LivingEntity user) {
         //burn for 2 seconds, deals 1 heart of damage
         if(user.getType() != EntityType.FOX)
             user.setOnFireFor(2);
@@ -38,32 +41,19 @@ public class SpicyBerry extends Item {
         user.setFrozenTicks(newFrozenTicks);
         //give consumer warmth II effect for 4 seconds to halt the rate of freezing
         user.addStatusEffect(new StatusEffectInstance(BBEffects.WARMTH, 80, 1));
+    }
 
-        //it spreads.
-        //warm up nearby mobs too !!
-        if(user.hasStatusEffect(BBEffects.CONVECTION))
-        {
-            int radius = 3 + user.getStatusEffect(BBEffects.CONVECTION).getAmplifier();
-            Box myBox = new Box(user.getBlockPos()).expand(radius);
-            List<LivingEntity> entityList = user.getWorld().getEntitiesByClass(LivingEntity.class,myBox,e->e.isAlive());
-            entityList.remove(user);
-
-            for(LivingEntity entity : entityList)
-            {
-                //burn for 1 seconds, deals 1/2 heart of damage
-                if(entity.getType() != EntityType.FOX)
-                    entity.setOnFireFor(1);
-                //instantly reduce freezing by 40 ticks
-                newFrozenTicks = entity.getFrozenTicks() - 40;
-                if(newFrozenTicks < 0)
-                    newFrozenTicks = 0;
-                entity.setFrozenTicks(newFrozenTicks);
-                //give consumer warmth I effect for 4 seconds to halve the rate of freezing
-                entity.addStatusEffect(new StatusEffectInstance(BBEffects.WARMTH, 80, 1));
-            }
-        }
-
-
-        return super.finishUsing(stack, world, user);
+    //what happens to all entities affected by the user eating this berry with convection
+    public void weakEffect(LivingEntity entity) {
+        //burn for 1 seconds, deals 1/2 heart of damage
+        if(entity.getType() != EntityType.FOX)
+            entity.setOnFireFor(1);
+        //instantly reduce freezing by 40 ticks
+        int newFrozenTicks = entity.getFrozenTicks() - 40;
+        if(newFrozenTicks < 0)
+            newFrozenTicks = 0;
+        entity.setFrozenTicks(newFrozenTicks);
+        //give consumer warmth I effect for 4 seconds to halve the rate of freezing
+        entity.addStatusEffect(new StatusEffectInstance(BBEffects.WARMTH, 80, 1));
     }
 }
