@@ -27,20 +27,21 @@ abstract class Berry extends Item {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        strongEffect(user);
         //it spreads.
         if(user.hasStatusEffect(BBEffects.CONVECTION))
         {
             int radius = 3 + user.getStatusEffect(BBEffects.CONVECTION).getAmplifier();
             Box myBox = new Box(user.getBlockPos()).expand(radius);
             List<LivingEntity> entityList = user.getWorld().getEntitiesByClass(LivingEntity.class,myBox,e->e.isAlive());
-            entityList.remove(user);
 
             for(LivingEntity entity : entityList)
             {
                 weakEffect(entity);
             }
         }
+        //standard effect when the user doesn't have convection
+        else
+            strongEffect(user);
         return super.finishUsing(stack, world, user);
     }
 }

@@ -12,11 +12,6 @@ import symbolics.division.berry_bounty.berry.Berry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import symbolics.division.berry_bounty.registry.BBEffects;
 
-import net.minecraft.util.math.Box;
-import net.minecraft.util.TypeFilter;
-import java.util.List;
-import net.minecraft.entity.passive.FoxEntity;
-
 /**
  * Eating this berry sets the user on fire for 2 seconds, which should deal one heart of damage overall
  *  Fire resistance/protection or being in water should help against this
