@@ -35,6 +35,8 @@ public class AiryBerry extends Berry {
         //give consumer slow falling and speed 4 effect for 6 seconds
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 120, 0));
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 120, 3));
+        //give consumer the airy effect for 60 seconds
+        target.addStatusEffect(new StatusEffectInstance(BBEffects.AIRY, 1200, 0));
     }
 
     @Override
@@ -49,6 +51,8 @@ public class AiryBerry extends Berry {
         //give consumer slow falling and speed 2 effect for 5 seconds
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 0));
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 100, 1));
+        //give consumer the airy effect for 30 seconds
+        target.addStatusEffect(new StatusEffectInstance(BBEffects.AIRY, 600, 0));
     }
 }
 

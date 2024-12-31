@@ -10,14 +10,17 @@ import net.minecraft.entity.effect.StatusEffect;
 
 import symbolics.division.berry_bounty.effects.ConvectionEffect;
 import symbolics.division.berry_bounty.effects.WarmthEffect;
+import symbolics.division.berry_bounty.effects.AiryEffect;
 
 public class BBEffects implements ModInitializer {
     public static final RegistryEntry<StatusEffect> WARMTH;
     public static final RegistryEntry<StatusEffect> CONVECTION;
+    public static final RegistryEntry<StatusEffect> AIRY;
 
     static {
         WARMTH = Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of("berry_bounty", "warmth"), new WarmthEffect());
         CONVECTION = Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of("berry_bounty", "convection"), new ConvectionEffect());
+        AIRY = Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of("berry_bounty", "airy"), new AiryEffect());
     }
 
     @Override
