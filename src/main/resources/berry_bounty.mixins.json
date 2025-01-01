@@ -3,7 +3,8 @@
 	"package": "symbolics.division.berry_bounty.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"MobEntityMixin"
+		"MobEntityMixin",
+		"LivingEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
