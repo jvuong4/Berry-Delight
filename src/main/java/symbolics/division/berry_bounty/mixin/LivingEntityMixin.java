@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,6 +18,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import symbolics.division.berry_bounty.registry.BBEffects;
 
 
@@ -27,6 +30,20 @@ import symbolics.division.berry_bounty.BerryBounty;
 //ok so this does NOT work as intended so i'm gonna look at it again later
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
+
+    /*
+    @Inject(method = "takeKnockback", at = @At("Head"))
+    private void boostStrength(@Local(ordinal = 0) double strength) {
+        strength *= 2;
+    }
+     */
+
+    /*
+    @ModifyArg(method = "takeKnockback()V", at = @At(value = "INVOKE", target = "La/b/c/Something;takeKnockback(DDD)V"), index = 0)
+    private double boostStrength(double strength) {
+        return strength * 2;
+    }
+     */
 
     //@Shadow
     //private Map<StatusEffect,StatusEffectInstance> activeStatusEffects;
