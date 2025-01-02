@@ -24,10 +24,10 @@ public class FrostBerry extends Berry{
     public void strongEffect(LivingEntity target) {
         //immediately give user +140 freezing ticks (enough to start taking damage)
         target.setFrozenTicks(target.getFrozenTicks() + 140);
-        //TODO: add freezing effect
-
-        //give user fire res for 3 seconds
-        target.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 60, 0));
+        //freezes target for 4 seconds
+        target.addStatusEffect(new StatusEffectInstance(BBEffects.FREEZING, 80, 0));
+        //give user fire res for 4 seconds
+        target.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 80, 0));
     }
 
     @Override
@@ -36,8 +36,8 @@ public class FrostBerry extends Berry{
     public void weakEffect(LivingEntity target) {
         //immediately give user +140 freezing ticks (enough to start taking damage)
         target.setFrozenTicks(target.getFrozenTicks() + 140);
-        //TODO: add freezing effect
-
+        //freezes target for 2 seconds
+        target.addStatusEffect(new StatusEffectInstance(BBEffects.FREEZING, 40, 0));
         //give user fire res for 2 seconds
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 40, 0));
     }
