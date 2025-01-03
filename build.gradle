@@ -17,10 +17,14 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 
-//	maven {
-//		name "echosMavenSnapshots"
-//		url "https://maven.callmeecho.dev/snapshots"
-//	}
+	maven {
+		name = 'GeckoLib'
+		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+		content {
+			includeGroupByRegex("software\\.bernie.*")
+			includeGroup("com.eliotlash.mclib")
+		}
+	}
 }
 
 loom {
@@ -53,14 +57,10 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-//	def specterModule = { String moduleName ->
-//		include "dev.spiritstudios.specter:specter-$moduleName:${project.specter_version}"
-//		modImplementation "dev.spiritstudios.specter:specter-$moduleName:${project.specter_version}"
-//	}
-//
-//	specterModule("core")
-//	specterModule("registry")
-//	specterModule("render")
+	// geckolib
+	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
+	implementation("com.eliotlash.mclib:mclib:20")
+
 }
 
 processResources {
