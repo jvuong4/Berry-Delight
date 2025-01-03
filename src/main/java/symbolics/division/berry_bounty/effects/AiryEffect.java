@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.attribute.AttributeContainer;
 import symbolics.division.berry_bounty.registry.BBEffects;
 
 public class AiryEffect extends StatusEffect{
@@ -13,20 +12,6 @@ public class AiryEffect extends StatusEffect{
         // color: int - Color is the color assigned to the effect (in RGB)
         super(StatusEffectCategory.BENEFICIAL, 0xe9b8b3);
     }
-
-    /*
-    @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier)
-    {
-
-    }
-
-    @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier)
-    {
-
-    }
-    */
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
