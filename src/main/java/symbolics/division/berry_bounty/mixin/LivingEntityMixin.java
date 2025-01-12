@@ -17,6 +17,11 @@ public abstract class LivingEntityMixin {
 
     @WrapMethod(method = "takeKnockback")
     private void modifyKnockback(double strength, double x, double z, Operation<Void> original) {
-        original.call(this.hasStatusEffect(BBEffects.AIRY) ? strength * 4 : strength, x, z);
+        double newStrength = strength;
+        if(this.hasStatusEffect(BBEffects.AIRY))
+            newStrength *= 4;
+        if(this.hasStatusEffect(BBEffects.HEAVY))
+            newStrength /= 2;
+        original.call(newStrength, x, z);
     }
 }
