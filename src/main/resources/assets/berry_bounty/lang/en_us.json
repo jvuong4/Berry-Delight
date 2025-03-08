@@ -9,9 +9,12 @@
   "item.berry_bounty.beast_berry": "Beast Berries",
   "item.berry_bounty.sea_berry": "Sea Berries",
   "item.berry_bounty.frost_berry": "Frost Berries",
+  "item.berry_bounty.heavy_berry": "Heavy Berries",
 
   "effect.berry_bounty.convection": "Convection",
   "effect.berry_bounty.warmth": "Warmth",
+  "effect.berry_bounty.heavy": "Heavy",
+  "effect.berry_bounty.freezing": "Freezing",
   "effect.berry_bounty.airy": "Airy"
 
 }
