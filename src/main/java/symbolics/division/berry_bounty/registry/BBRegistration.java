@@ -8,6 +8,7 @@ public class BBRegistration {
     public static void init() {
         BBItems.init();
         BBEffects.init();
+        BBBlocks.init();
 
         Registry.register(Registries.ITEM_GROUP, BBItems.ITEM_GROUP_KEY, BBItems.ITEM_GROUP);
 

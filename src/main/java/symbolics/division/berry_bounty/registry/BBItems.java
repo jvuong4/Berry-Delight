@@ -2,7 +2,9 @@ package symbolics.division.berry_bounty.registry;
 
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.FoodComponents;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
@@ -29,6 +31,16 @@ public final class BBItems {
     public static final Item SEA_BERRY = item("sea_berry", new SeaBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
     public static final Item FROST_BERRY = item("frost_berry", new FrostBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
     public static final Item Heavy_BERRY = item("heavy_berry", new HeavyBerry(new Item.Settings().food(FoodComponents.SWEET_BERRIES)));
+
+    public static final Item CONVECTION_PIE_SLICE = item("convection_pie_slice",
+            new Item(new Item.Settings().food(
+                    new FoodComponent.Builder()
+                            .nutrition(3)
+                            .saturationModifier(0.3f)
+                            .snack()
+                            .statusEffect(new StatusEffectInstance(BBEffects.CONVECTION, 400, 7), 1.0f)
+                            .build()
+            )));
 
     public static final RegistryKey<ItemGroup> ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), BerryBounty.id("item_group"));
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()

@@ -15,6 +15,9 @@
   "effect.berry_bounty.warmth": "Warmth",
   "effect.berry_bounty.heavy": "Heavy",
   "effect.berry_bounty.freezing": "Freezing",
-  "effect.berry_bounty.airy": "Airy"
+  "effect.berry_bounty.airy": "Airy",
+
+  "item.berry_bounty.convection_pie_slice": "Tie Dye Pie Slice",
+  "block.berry_bounty.convection_pie": "Tie Dye Pie"
 
 }

@@ -25,6 +25,54 @@ repositories {
 			includeGroup("com.eliotlash.mclib")
 		}
 	}
+
+	//fd repositories
+	flatDir {
+		dirs 'mods'
+	}
+
+	maven { url "https://maven.parchmentmc.org" }
+
+	maven {
+		url = "https://www.cursemaven.com"
+		allowInsecureProtocol = true
+	}
+
+	maven {
+		url "https://maven.firstdarkdev.xyz/snapshots"
+	}
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+	}
+
+	maven {
+		url = "https://api.modrinth.com/maven"
+	}
+
+	maven {
+		// CraftTweaker, JEI
+		name = "BlameJared"
+		url = "https://maven.blamejared.com/"
+	}
+	maven { url "https://maven.ryanliptak.com/" } // AppleSkin
+	maven { url = "https://maven.parchmentmc.org" } // Parchment
+	maven { url = "https://maven.fabricmc.net/" } // FAPI, Loader
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://jitpack.io"
+			}
+		}
+		filter {
+			includeGroup "com.github.Chocohead"
+		}
+	}
+	maven { url = "https://maven.architectury.dev/" } // REI and deps
+	maven { url = "https://maven.shedaniel.me/" } // REI and deps
+	maven { url = "https://maven.terraformersmc.com/" } // Mod Menu, EMI
+	mavenCentral() // Mixin Extras
 }
 
 loom {
@@ -61,6 +109,14 @@ dependencies {
 	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
 	implementation("com.eliotlash.mclib:mclib:20")
 
+	//fd dependencies
+	//modImplementation("")
+
+	//config stuff. optional
+	modCompileOnly("curse.maven:yacl-667299:5424169")
+	modCompileOnly("com.terraformersmc:modmenu:4.0.6")
+	modCompileOnly("me.shedaniel.cloth:basic-math:0.6.1")
+	modCompileOnly("dev.architectury:architectury-fabric:13.0.6")
 }
 
 processResources {
