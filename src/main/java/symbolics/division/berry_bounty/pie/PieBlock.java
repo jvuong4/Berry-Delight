@@ -5,11 +5,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.IntProperty;
@@ -28,6 +31,8 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.tag.ModTags;
 import vectorwing.farmersdelight.common.utility.ItemUtils;
+
+import net.minecraft.component.type.FoodComponent;
 
 import java.util.function.Supplier;
 
@@ -87,19 +92,18 @@ public class PieBlock extends Block {
         return consumeBite(world, pos, state, player);
     }
 
-    // TODO: Convert this to Yarn
     protected ActionResult useWithoutItem(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            if (consumeBite(level, pos, state, player).consumesAction()) {
-                return InteractionResult.SUCCESS;
+        if (world.isClient) {
+            if (consumeBite(world, pos, state, player).isAccepted()) {
+                return ActionResult.SUCCESS;
             }
 
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
-                return InteractionResult.CONSUME;
+            if (player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
+                return ActionResult.CONSUME;
             }
         }
 
-        return consumeBite(level, pos, state, player);
+        return consumeBite(world, pos, state, player);
     }
 
     /**
@@ -107,29 +111,29 @@ public class PieBlock extends Block {
      */
     // TODO: Convert this to Yarn
     protected ActionResult consumeBite(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!playerIn.canEat(false)) {
-            return InteractionResult.PASS;
+        if (!player.canConsume(false)) {
+            return ActionResult.PASS;
         } else {
             ItemStack sliceStack = this.getPieSliceItem();
-            FoodProperties sliceFood = sliceStack.get(DataComponents.FOOD);
+            FoodComponent sliceFood = sliceStack.get(DataComponentTypes.FOOD);
 
             if (sliceFood != null) {
-                playerIn.getFoodData().eat(sliceFood);
-                for (FoodProperties.PossibleEffect effect : sliceFood.effects()) {
-                    if (!level.isClientSide && effect != null && level.random.nextFloat() < effect.probability()) {
-                        playerIn.addEffect(effect.effect());
+                player.getHungerManager().eat(sliceFood);
+                for (FoodComponent.StatusEffectEntry effect : sliceFood.effects()) {
+                    if (!world.isClient && effect != null && world.random.nextFloat() < effect.probability()) {
+                        player.addStatusEffect(effect.effect());
                     }
                 }
             }
 
-            int bites = state.getValue(BITES);
+            int bites = state.get(BITES);
             if (bites < getMaxBites() - 1) {
-                level.setBlock(pos, state.setValue(BITES, bites + 1), 3);
+                world.setBlockState(pos, state.setValue(BITES, bites + 1), 3);
             } else {
-                level.removeBlock(pos, false);
+                world.removeBlock(pos, false);
             }
-            level.playSound(null, pos, SoundEvents.GENERIC_EAT, SoundSource.PLAYERS, 0.8F, 0.8F);
-            return InteractionResult.SUCCESS;
+            world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 0.8F, 0.8F);
+            return ActionResult.SUCCESS;
         }
     }
 
@@ -138,17 +142,17 @@ public class PieBlock extends Block {
      */
     // TODO: Convert this to Yarn
     protected ItemActionResult cutSlice(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        int bites = state.getValue(BITES);
+        int bites = state.get(BITES);
         if (bites < getMaxBites() - 1) {
-            level.setBlock(pos, state.setValue(BITES, bites + 1), 3);
+            world.setBlockState(pos, state.setValue(BITES, bites + 1), 3);
         } else {
-            level.removeBlock(pos, false);
+            world.removeBlock(pos, false);
         }
 
         Direction direction = player.getDirection().getOpposite();
-        ItemUtils.spawnItemEntity(level, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
-                direction.getStepX() * 0.15, 0.05, direction.getStepZ() * 0.15);
-        level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
+        ItemUsage.spawnItemEntity(world, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
+                direction.getOffsetX() * 0.15, 0.05, direction.getOffsetZ() * 0.15);
+        world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 0.8F, 0.8F);
         return ItemActionResult.SUCCESS;
     }
 
