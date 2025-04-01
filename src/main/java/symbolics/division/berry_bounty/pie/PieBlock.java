@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -31,8 +32,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.tag.ModTags;
 import vectorwing.farmersdelight.common.utility.ItemUtils;
-
-import net.minecraft.component.type.FoodComponent;
 
 import java.util.function.Supplier;
 
@@ -109,7 +108,6 @@ public class PieBlock extends Block {
     /**
      * Eats a slice from the pie, feeding the player.
      */
-    // TODO: Convert this to Yarn
     protected ActionResult consumeBite(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!player.canConsume(false)) {
             return ActionResult.PASS;
@@ -128,7 +126,7 @@ public class PieBlock extends Block {
 
             int bites = state.get(BITES);
             if (bites < getMaxBites() - 1) {
-                world.setBlockState(pos, state.setValue(BITES, bites + 1), 3);
+                world.setBlockState(pos, state.with(BITES, bites + 1), 3);
             } else {
                 world.removeBlock(pos, false);
             }
@@ -140,17 +138,16 @@ public class PieBlock extends Block {
     /**
      * Cuts off a bite and drops a slice item, without feeding the player.
      */
-    // TODO: Convert this to Yarn
     protected ItemActionResult cutSlice(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         int bites = state.get(BITES);
         if (bites < getMaxBites() - 1) {
-            world.setBlockState(pos, state.setValue(BITES, bites + 1), 3);
+            world.setBlockState(pos, state.with(BITES, bites + 1), 3);
         } else {
             world.removeBlock(pos, false);
         }
 
         Direction direction = player.getHorizontalFacing().getOpposite();
-        ItemUsage.spawnItemEntity(world, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
+        ItemUtils.spawnItemEntity(world, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
                 direction.getOffsetX() * 0.15, 0.05, direction.getOffsetZ() * 0.15);
         world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 0.8F, 0.8F);
         return ItemActionResult.SUCCESS;
