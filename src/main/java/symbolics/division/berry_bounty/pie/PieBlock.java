@@ -1,81 +1,52 @@
 package symbolics.division.berry_bounty.pie; //vectorwing.farmersdelight.common.block;
 
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import vectorwing.farmersdelight.common.tag.ModTags;
-import vectorwing.farmersdelight.common.utility.ItemUtils;
-
-
-import java.util.function.Supplier;
-
-
-//import net.fabricmc.loader.impl.lib.tinyremapper.extension.mixin.common.Logger;
 import net.minecraft.block.Block;
-import net.minecraft.block.AbstractBlock.Settings;
 import net.minecraft.block.BlockState;
-
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.Box;
-import symbolics.division.berry_bounty.registry.BBBlocks;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
+import vectorwing.farmersdelight.common.tag.ModTags;
+import vectorwing.farmersdelight.common.utility.ItemUtils;
 
 import java.util.function.Supplier;
 
-
-
-@SuppressWarnings("deprecation")
-public class PieBlock extends Block
-{
-
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+public class PieBlock extends Block {
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty BITES = IntProperty.of("bites", 0, 3);
 
-    protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
 
     public final Supplier<Item> pieSlice;
 
     public PieBlock(Settings properties, Supplier<Item> pieSlice) {
         super(properties);
         this.pieSlice = pieSlice;
-        BBBlocks.register(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(BITES, 0));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(BITES, 0));
     }
 
     public ItemStack getPieSliceItem() {
-        return new ItemStack(this.pieSlice);
+        return new ItemStack(this.pieSlice.get());
     }
 
     public int getMaxBites() {
@@ -83,25 +54,41 @@ public class PieBlock extends Block
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack heldStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (heldStack.is(ModTags.KNIVES)) {
-            return cutSlice(level, pos, state, player);
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (stack.isIn(ModTags.KNIVES)) {
+            return cutSlice(world, pos, state, player);
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.isClient) {
+            if (consumeBite(world, pos, state, player).isAccepted()) {
+                return ActionResult.SUCCESS;
+            }
+
+            if (player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
+                return ActionResult.CONSUME;
+            }
+        }
+
+        return consumeBite(world, pos, state, player);
+    }
+
+    // TODO: Convert this to Yarn
+    protected ActionResult useWithoutItem(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hitResult) {
         if (level.isClientSide) {
             if (consumeBite(level, pos, state, player).consumesAction()) {
                 return InteractionResult.SUCCESS;
@@ -118,7 +105,8 @@ public class PieBlock extends Block
     /**
      * Eats a slice from the pie, feeding the player.
      */
-    protected InteractionResult consumeBite(Level level, BlockPos pos, BlockState state, Player playerIn) {
+    // TODO: Convert this to Yarn
+    protected ActionResult consumeBite(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!playerIn.canEat(false)) {
             return InteractionResult.PASS;
         } else {
@@ -148,7 +136,8 @@ public class PieBlock extends Block
     /**
      * Cuts off a bite and drops a slice item, without feeding the player.
      */
-    protected ItemInteractionResult cutSlice(Logger.Level level, BlockPos pos, BlockState state, Player player) {
+    // TODO: Convert this to Yarn
+    protected ItemActionResult cutSlice(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         int bites = state.getValue(BITES);
         if (bites < getMaxBites() - 1) {
             level.setBlock(pos, state.setValue(BITES, bites + 1), 3);
@@ -160,36 +149,36 @@ public class PieBlock extends Block
         ItemUtils.spawnItemEntity(level, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
                 direction.getStepX() * 0.15, 0.05, direction.getStepZ() * 0.15);
         level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
-        return ItemInteractionResult.SUCCESS;
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
-        return facing == Direction.DOWN && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
+    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        return direction == Direction.DOWN && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return level.getBlockState(pos.below()).isSolid();
+    protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        return world.getBlockState(pos.down()).isSolid();
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, BITES);
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
-        return getMaxBites() - blockState.getValue(BITES);
+    protected int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return getMaxBites() - state.get(BITES);
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
+    protected boolean hasComparatorOutput(BlockState state) {
         return true;
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, PathComputationType type) {
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 }

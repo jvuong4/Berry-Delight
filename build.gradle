@@ -31,6 +31,13 @@ repositories {
 		name = "Greenhouse Maven"
 		url = 'https://repo.greenhouse.house/releases/'
 	}
+
+	maven {
+		url "https://jitpack.io/" // Fabric ASM
+		content {
+			excludeGroup "io.github.fabricators_of_create"
+		}
+	}
 }
 
 loom {
@@ -68,7 +75,7 @@ dependencies {
 	implementation("com.eliotlash.mclib:mclib:20")
 
 	//fd dependencies
-	modImplementation("vectorwing:FarmersDelight:${fdrf_version}") {
+	modImplementation("vectorwing:FarmersDelight:${fdrf_version}+refabricated") {
 		exclude(group: "net.fabricmc")
 	}
 }
