@@ -149,7 +149,7 @@ public class PieBlock extends Block {
             world.removeBlock(pos, false);
         }
 
-        Direction direction = player.getDirection().getOpposite();
+        Direction direction = player.getHorizontalFacing().getOpposite();
         ItemUsage.spawnItemEntity(world, this.getPieSliceItem(), pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5,
                 direction.getOffsetX() * 0.15, 0.05, direction.getOffsetZ() * 0.15);
         world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 0.8F, 0.8F);
