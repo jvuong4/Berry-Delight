@@ -41,16 +41,16 @@ public class PieBlock extends Block {
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
 
-    public final Supplier<Item> pieSlice;
+    public final Item pieSlice;
 
-    public PieBlock(Settings properties, Supplier<Item> pieSlice) {
+    public PieBlock(Settings properties, Item pieSlice) {
         super(properties);
         this.pieSlice = pieSlice;
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(BITES, 0));
     }
 
     public ItemStack getPieSliceItem() {
-        return new ItemStack(this.pieSlice.get());
+        return new ItemStack(this.pieSlice);
     }
 
     public int getMaxBites() {
