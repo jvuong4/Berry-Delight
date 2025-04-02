@@ -12,6 +12,11 @@ public class BBRegistration {
 
         Registry.register(Registries.ITEM_GROUP, BBItems.ITEM_GROUP_KEY, BBItems.ITEM_GROUP);
 
-        ItemGroupEvents.modifyEntriesEvent(BBItems.ITEM_GROUP_KEY).register(group -> BBItems.getAllItems().forEach(group::add));
+        ItemGroupEvents.modifyEntriesEvent(BBItems.ITEM_GROUP_KEY).register(
+                group -> {
+                    BBItems.getAllItems().forEach(group::add);
+                    BBBlocks.getAllBlockItems().forEach(group::add);
+                }
+        );
     }
 }

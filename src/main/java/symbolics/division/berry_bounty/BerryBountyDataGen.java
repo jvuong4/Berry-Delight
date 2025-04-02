@@ -9,6 +9,7 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
 import net.minecraft.registry.RegistryWrapper;
+import symbolics.division.berry_bounty.registry.BBBlocks;
 import symbolics.division.berry_bounty.registry.BBItems;
 
 import java.util.concurrent.CompletableFuture;
@@ -50,6 +51,9 @@ public class BerryBountyDataGen implements DataGeneratorEntrypoint {
 			itemGen.register(BBItems.RED_BERRY, Models.GENERATED);
 			itemGen.register(BBItems.BLUE_BERRY, Models.GENERATED);
 			itemGen.register(BBItems.YELLOW_BERRY, Models.GENERATED);
+
+			itemGen.register(BBItems.CONVECTION_PIE_SLICE, Models.GENERATED);
+			itemGen.register(BBBlocks.CONVECTION_PIE.asItem(), Models.GENERATED);
 		}
 	}
 }

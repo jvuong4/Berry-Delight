@@ -1,0 +1,10 @@
+{
+  "parent": "farmersdelight:block/pie_slice1",
+  "textures": {
+    "particle": "berry_bounty:block/convection_pie_top",
+    "bottom": "berry_bounty:block/convection_pie_bottom",
+    "inner": "berry_bounty:block/convection_pie_inner",
+    "side": "berry_bounty:block/convection_pie_side",
+    "top": "berry_bounty:block/convection_pie_top"
+  }
+}
