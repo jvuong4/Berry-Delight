@@ -14,7 +14,7 @@ import symbolics.division.berry_bounty.BerryBounty;
 import symbolics.division.berry_bounty.pie.PieBlock;
 
 public final class BBBlocks {
-    public static final Block PIE_BLOCK = register(new PieBlock(AbstractBlock.Settings.copy(Blocks.CAKE), BBItems.CONVECTION_PIE_SLICE), "pie_block", true);
+    public static final Block PIE_BLOCK = register(new PieBlock(AbstractBlock.Settings.copy(Blocks.CAKE), BBItems.CONVECTION_PIE_SLICE), "convection_pie", true);
 
     public static Block register(Block block, String name, boolean shouldRegisterItem) {
         // Register the block and its item.
