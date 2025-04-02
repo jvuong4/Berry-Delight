@@ -18,6 +18,8 @@
   "effect.berry_bounty.airy": "Airy",
 
   "item.berry_bounty.convection_pie_slice": "Convection Pie Slice",
-  "block.berry_bounty.convection_pie": "Convection Pie"
+  "block.berry_bounty.convection_pie": "Convection Pie",
+
+  "itemGroup.berry_bounty": "Berry Bounty"
 
 }
