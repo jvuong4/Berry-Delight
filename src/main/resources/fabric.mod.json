@@ -3,9 +3,9 @@
 	"id": "berry_bounty",
 	"version": "${version}",
 	"name": "berry_bounty",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Special berries that can be eaten for special effects!",
 	"authors": [
-		"Me!"
+		"Jaevy"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -36,7 +36,8 @@
 		"fabricloader": ">=0.16.3",
 		"minecraft": "~1.21.1",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"farmersdelight": "*"
 	},
 	"suggests": {
 		"another-mod": "*"
